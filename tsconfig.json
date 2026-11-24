@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "types": [],
+    "paths": {
+      "@events/*": ["./src/events/*"],
+      "@game/*": ["./src/game/*"],
+      "@engine/*": ["./src/game/engine/*"],
+      "@players/*": ["./src/game/players/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@ui/*": ["./src/ui/*"],
+      "@components/*": ["./src/ui/components/*"],
+      "@lobby/*": ["./src/lobby/*"]
+    },
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noUncheckedIndexedAccess": false,
+    "exactOptionalPropertyTypes": false,
+    "strict": false,
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "plugins": [
+      {
+        "name": "ts-lit-plugin"
+      }
+    ]
+  }
+}

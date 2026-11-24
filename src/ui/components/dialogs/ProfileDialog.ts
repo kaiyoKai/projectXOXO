@@ -1,0 +1,127 @@
+import { LitElement, html, css } from "lit";
+import { customElement, property, query, state } from "lit/decorators.js";
+import { ThemeMap, type ThemeKey } from "@ui/Theme.ts";
+import { assertPlayerSymbol } from "@shared/Common.ts";
+import "emoji-picker-element";
+import "./BaseDialog.js";
+
+@customElement("profile-dialog")
+export class ProfileDialog extends LitElement {
+  @query("base-dialog") private baseDialog!: any;
+  @state() public selectedThemeName: ThemeKey =
+    (localStorage.getItem("user-theme") as ThemeKey) || "Catppuccin";
+  @state() private buttonShape: string = localStorage.getItem("btn-shape") || "square";
+
+  @state() private username: string = "Kai";
+  @state() private symbol: string = "X";
+  @state() private symbolError: string = "";
+  @state() private showEmojiPicker: boolean = false;
+
+  static styles = css`
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    select,
+    input[type="text"] {
+      padding: 0.5rem;
+      border-radius: 8px;
+      background: var(--bg-color);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      width: 100%;
+    }
+  `;
+
+  public show() {
+    this.baseDialog.show();
+  }
+
+  private handleThemeChange(e: Event) {
+    const select = e.target as HTMLSelectElement;
+  }
+
+  private saveAndClose() {
+    const user = {
+      username: this.username,
+      symbol: assertPlayerSymbol(this.symbol),
+    };
+    this.baseDialog.close();
+    return user;
+  }
+
+  render() {
+    return html`
+      <base-dialog title="Profil &amp; Design">
+        <div class="settings-grid">
+          <label>Benutzername:</label>
+          <input
+            type="text"
+            .value="${this.username}"
+            @input="${(e: any) => (this.username = e.target.value)}"
+          />
+          <hr
+            style="grid-column: 1 / -1; width: 100%; border: 0; border-top: 1px solid var(--border-color); margin: 0.5rem 0;"
+          />
+
+          <label>Farbschema:</label>
+          <select @change="${this.handleThemeChange}">
+            ${(Object.keys(ThemeMap) as ThemeKey[]).map(
+              (key) => html`
+                <option value="${key}" ?selected="${key === this.selectedThemeName}">${key}</option>
+              `,
+            )}
+          </select>
+
+          <label>Button-Stil:</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input
+                type="radio"
+                name="shape"
+                ?checked="${this.buttonShape === "rounded"}"
+                @change="${() => {
+                  throw new Error("TODO");
+                }}"
+              />
+              Rund
+            </label>
+            <label class="radio-option">
+              <input
+                type="radio"
+                name="shape"
+                ?checked="${this.buttonShape === "square"}"
+                @change="${() => {
+                  throw new Error("TODO");
+                }}"
+              />
+              Eckig
+            </label>
+          </div>
+        </div>
+
+        <div slot="footer">
+          <button
+            class="btn primary"
+            @click="${this.saveAndClose}"
+            ?disabled="${!!this.symbolError}"
+          >
+            Fertig
+          </button>
+        </div>
+      </base-dialog>
+    `;
+  }
+}
